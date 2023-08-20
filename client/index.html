@@ -1,0 +1,28 @@
+<html>
+<head>
+<script type="text/javascript" src="jquery-3.7.0-dev.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $("button").click(function(){
+        let endpoint = "http://127.0.0.1:5000/test-endpoint";
+
+        $.ajax({
+            url: endpoint,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(result){
+                console.log(result);
+            }
+        });
+    });
+});
+</script>
+</head>
+<body>
+hello
+
+<button>Click me</button>
+
+</body>
+</html>

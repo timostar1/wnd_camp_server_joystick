@@ -1,0 +1,95 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Car controller</title>
+    <script
+        type="text/javascript"
+        src="{{ url_for('static', filename='jquery-3.7.0-dev.js') }}">
+    </script>
+</head>
+<body onkeyup="keyUpHandler()" onkeydown="keyDownHandler()">
+
+<section>
+    <div class="container">
+        <div class="machine">
+            <div>
+                <div class="wheel front" id="frontLeft">-100</div>
+                <div class="wheel back" id="backLeft">100</div>
+            </div>
+            <div class="car_body">
+                <div class="carFront">
+                    <span class="dis">Дистанция спереди:</span><br/>
+                    <span id="distance1" class="box">400</span> см.
+                </div>
+                <div class="carCenter">
+                    Скорость поворота<br/>(от 80 до 255):<input type="number" id="input"/>
+                </div>
+                <div class="carBack">
+                    <span class="dis">Дистанция сзади:</span><br/>
+                    <span id="distance2" class="box">400</span> см.
+                </div>
+            </div>
+            <div>
+                <div class="wheel front" id="frontRight">100</div>
+                <div class="wheel back" id="backRight">-100</div>
+            </div>
+        </div>
+        <div class="buttons">
+            <button onmousedown="keyDownHandler(65)" onmouseup="keyUpHandler(65)">
+                <div class="arrow-2">
+                    <div></div>
+                </div>
+            </button>
+            <button onmousedown="keyDownHandler(68)" onmouseup="keyUpHandler(68)">
+                <div class="arrow-1">
+                    <div></div>
+                </div>
+            </button>
+        </div>
+    </div>
+    <canvas
+            onmouseup="outClickHandler()"
+            onmousemove="mouseMoveHandler()"
+            onmousedown="clickHandler()"
+            id="canv"
+            width="440" height="440">
+
+    </canvas>
+</section>
+
+<script src="{{ url_for('static', filename='Formulas.js') }}"></script>
+<script src="{{ url_for('static', filename='Draw.js') }}"></script>
+<script src="{{ url_for('static', filename='Joystick.js') }}"></script>
+<script src="{{ url_for('static', filename='InputHandler.js') }}"></script>
+<script src="{{ url_for('static', filename='Classes.js') }}"></script>
+<script src="{{ url_for('static', filename='StartCode.js') }}"></script>
+<script
+    type="text/javascript"
+    src="{{ url_for('static', filename='client.js') }}">
+</script>
+<script>
+setInterval(function(){
+    $.getJSON("{{ url_for('check_session') }}", function(data){
+        console.log(data);
+        if (!data.session_active) {
+            location.replace("{{ url_for('auth_need') }}");
+        }
+    });
+}, 500);
+setInterval(function(){
+    var data = {
+        "x": joystick.getX(),
+        "y": joystick.getY(),
+        "turn": joystick.getTurn()
+    };
+    ws_send(data);
+}, 500);
+
+draw.joy.src = "{{ url_for('static', filename='img/joy.png') }}";
+draw.green.src = "{{ url_for('static', filename='img/green.png') }}";
+draw.back.src = "{{ url_for('static', filename='img/back.png') }}";
+</script>
+
+</body>
+</html>
